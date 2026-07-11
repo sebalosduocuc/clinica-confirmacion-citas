@@ -1,0 +1,25 @@
+# Credenciales y secretos
+*.pem
+*.key
+*.crt
+.env
+.env.*
+secrets/
+credentials/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Logs
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Archivos temporales
+*.tmp
+*.bak
