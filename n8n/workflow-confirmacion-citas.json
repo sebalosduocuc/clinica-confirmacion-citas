@@ -1,0 +1,113 @@
+{
+  "name": "Confirmacion Citas - Slack y TTS",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        -64
+      ],
+      "id": "5cf4a57b-c73d-4930-9915-dec1b94f205c",
+      "name": "Trigger"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "SLACK_WEBHOOK_URL_A_CONFIGURAR_EN_N8N",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"text\": \"✅ Cita confirmada\\nPaciente: {{ $('Code').item.json.paciente }}\\nTeléfono: {{ $('Code').item.json.telefono }}\\nEspecialidad: {{ $('Code').item.json.especialidad }}\\nProfesional: {{ $('Code').item.json.profesional }}\\nFecha: {{ $('Code').item.json.fecha }}\\nHora: {{ $('Code').item.json.hora }}\\nEstado: {{ $('Code').item.json.estado }}\\nAudio TTS generado correctamente.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        320,
+        -64
+      ],
+      "id": "e35f2690-cba9-4d6a-8f65-8d8178e96b07",
+      "name": "HTTP Request Slack"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://tts-api:5000/tts",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"texto\": \"{{ $json.mensaje }}\",\n  \"nombre\": \"cita_confirmada_sebastian_lopez\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        112,
+        -64
+      ],
+      "id": "ba4daa85-436f-42bb-8747-82fcd1307b78",
+      "name": "HTTP Request TTS"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      paciente: \"Sebastian Lopez\",\n      telefono: \"1001\",\n      especialidad: \"Medicina General\",\n      profesional: \"Dra. Carolina Rojas\",\n      fecha: \"2026-07-20\",\n      hora: \"10:30\",\n      estado: \"confirmada\",\n      mensaje: \"Cita confirmada para Sebastian Lopez con Medicina General el dia 2026-07-20 a las 10:30.\"\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -64,
+        -64
+      ],
+      "id": "c67a57fa-9550-4772-ac35-a7c835f4bc52",
+      "name": "Code"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request TTS": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request TTS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "588e1ec0-29b7-49c7-a607-49fa0dc31ab8",
+  "meta": {
+    "instanceId": "bd1a193b25dc54cdb40fde4ef84b2d642f6152b1250468ae04b4ec99518e9e60"
+  },
+  "nodeGroups": [],
+  "id": "rlhyo574ua1Md1Wn",
+  "tags": []
+}
