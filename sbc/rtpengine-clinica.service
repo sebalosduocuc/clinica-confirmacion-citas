@@ -1,0 +1,12 @@
+[Unit]
+Description=RTPengine Clinica - Relay RTP para SBC Kamailio
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/rtpengine --foreground --interface=172.31.16.227!34.205.152.40 --listen-ng=127.0.0.1:22230 --listen-cli=127.0.0.1:22231 --port-min=10000 --port-max=20000 --log-level=6
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
